@@ -8,7 +8,7 @@ pub async fn app() -> anyhow::Result<()> {
     ScriptMapper::init().await;
     let addr = ServiceConfig::get().await.addr.clone();
     let listener = tokio::net::TcpListener::bind(&addr).await?;
-    println!("Listening On{}", addr);
+    println!("Listening On {}", addr);
     let router = Router::new().merge(script::route());
     axum::serve(listener, router.into_make_service()).await?;
     Ok(())
