@@ -9,7 +9,5 @@ mod utils;
 
 #[tokio::main]
 async fn main() {
-    // application::app().await.expect("App Exited With Error");
-    ServiceConfig::init().await;
-    ScriptMapper::init().await;
+    application::app().await.expect("App Exited With Error");
 }
