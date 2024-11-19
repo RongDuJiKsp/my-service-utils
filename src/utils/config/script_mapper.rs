@@ -1,12 +1,11 @@
 use crate::utils::config::arg::ServiceConfig;
-use anyhow::anyhow;
-use serde_json::{Map, Value};
+use serde_json::Value;
 use std::collections::HashMap;
 use std::process;
 use std::process::Output;
 use tokio::fs;
 use tokio::fs::File;
-use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
+use tokio::io::AsyncWriteExt;
 use tokio::process::Command;
 use tokio::sync::OnceCell;
 const EXEC_PARAM: &str = "exec";
@@ -40,9 +39,11 @@ impl ScriptMapper {
         self.arg_mapper[exec]
             .iter()
             .map(|arg| {
-                self.query_mapper[exec].iter().fold(arg.clone(), |before, query| {
-                    before.replace(&format!("?({})", query), &query_data[exec])
-                })
+                self.query_mapper[exec]
+                    .iter()
+                    .fold(arg.clone(), |before, query| {
+                        before.replace(&format!("?({})", query), &query_data[exec])
+                    })
             })
             .collect()
     }

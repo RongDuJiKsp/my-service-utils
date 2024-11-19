@@ -1,17 +1,12 @@
 use crate::utils::config::arg::ServiceConfig;
-use axum::body::{Body, BoxBody};
-use axum::extract::rejection::QueryRejection;
-use axum::extract::{FromRequest, Query};
+use axum::extract::Query;
 use axum::http::{Request, StatusCode};
 use axum::middleware::Next;
-use std::collections::HashMap;
 use axum::response::{IntoResponse, Response};
+use std::collections::HashMap;
 
 const TOKEN_PARAM: &str = "token";
-pub async fn check_token_param<B>(
-    req: Request<B>,
-    next: Next<B>,
-) -> Result<Response, StatusCode> {
+pub async fn check_token_param<B>(req: Request<B>, next: Next<B>) -> Result<Response, StatusCode> {
     let cfg_token = match &ServiceConfig::get().await.handle_token {
         Some(e) => e,
         None => return Ok(next.run(req).await),
@@ -30,5 +25,9 @@ pub async fn check_token_param<B>(
     Ok(next.run(req).await)
 }
 fn no_token_err() -> Result<Response, StatusCode> {
-    Ok((StatusCode::FORBIDDEN, "Custom Response: You cannot access this route of Not Token.").into_response())
+    Ok((
+        StatusCode::FORBIDDEN,
+        "Custom Response: You cannot access this route of Not Token.",
+    )
+        .into_response())
 }

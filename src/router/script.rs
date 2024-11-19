@@ -1,8 +1,8 @@
 use crate::middleware::token;
 use axum::extract::{Path, Query};
+use axum::middleware;
 use axum::routing::{get, Router};
 use std::collections::HashMap;
-use axum::middleware;
 
 pub fn route() -> Router {
     Router::new()
@@ -14,5 +14,4 @@ async fn run_script(
     Query(param): Query<HashMap<String, String>>,
     Path(script): Path<String>,
 ) -> String {
-
 }
