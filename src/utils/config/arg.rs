@@ -14,7 +14,7 @@ pub static SERVICE_CONFIG: OnceCell<ServiceConfig> = OnceCell::const_new();
 impl ServiceConfig {
     pub async fn get() -> &'static ServiceConfig {
         SERVICE_CONFIG
-            .get_or_init(||async { ServiceConfig::parse() })
+            .get_or_init(|| async { ServiceConfig::parse() })
             .await
     }
     pub async fn init() {

@@ -69,9 +69,7 @@ impl ScriptMapper {
     }
     pub async fn init() {
         LOADED_CONFIG
-            .set(ScriptMapper::from_file(
-                &ServiceConfig::get().await.script_mapper_file,
-            ).await)
+            .set(ScriptMapper::from_file(&ServiceConfig::get().await.script_mapper_file).await)
             .expect("Error on Load ScriptMapper")
     }
 }

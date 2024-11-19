@@ -8,6 +8,8 @@ pub async fn app() -> anyhow::Result<()> {
     ScriptMapper::init().await;
     let addr = SocketAddr::from(([0, 0, 0, 0], 80));
     println!("Server running on http://{}", addr);
-    axum::Server::bind(&addr).serve(script::route().into_make_service()).await?;
+    axum::Server::bind(&addr)
+        .serve(script::route().into_make_service())
+        .await?;
     Ok(())
 }
