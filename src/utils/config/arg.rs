@@ -3,6 +3,8 @@ use tokio::sync::OnceCell;
 
 #[derive(Debug, Parser)]
 pub struct ServiceConfig {
+    #[arg(long, default_value = "0.0.0.0:80")]
+    pub addr: String,
     #[arg(long, default_value = "./script")]
     pub script_dir: String,
     #[arg(long, default_value = "./sm.json")]
