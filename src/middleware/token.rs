@@ -1,4 +1,5 @@
 use crate::utils::config::arg::ServiceConfig;
+use axum::body::Body;
 use axum::extract::Query;
 use axum::http::{Request, StatusCode};
 use axum::middleware::Next;
@@ -6,7 +7,7 @@ use axum::response::{IntoResponse, Response};
 use std::collections::HashMap;
 
 const TOKEN_PARAM: &str = "token";
-pub async fn check_token_param<B>(req: Request<B>, next: Next<B>) -> Result<Response, StatusCode> {
+pub async fn check_token_param(req: Request<Body>, next: Next) -> Result<Response, StatusCode> {
     let cfg_token = match &ServiceConfig::get().await.handle_token {
         Some(e) => e,
         None => return Ok(next.run(req).await),

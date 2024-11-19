@@ -1,15 +1,14 @@
 use crate::router::script;
 use crate::utils::config::arg::ServiceConfig;
 use crate::utils::config::script_mapper::ScriptMapper;
-use std::net::SocketAddr;
+use axum::Router;
 
 pub async fn app() -> anyhow::Result<()> {
     ServiceConfig::init().await;
     ScriptMapper::init().await;
-    let addr = SocketAddr::from(([0, 0, 0, 0], 80));
-    println!("Server running on http://{}", addr);
-    axum::Server::bind(&addr)
-        .serve(script::route().into_make_service())
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:80").await?;
+    let router = Router::new().merge(script::route());
+    axum::serve(listener, router.into_make_service())
         .await?;
     Ok(())
 }
