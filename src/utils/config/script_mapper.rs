@@ -37,11 +37,14 @@ impl ScriptMapper {
         self.query_mapper.insert(key.to_string(), split);
     }
     fn write_query(&self, exec: &str, query_data: &HashMap<String, String>) -> Vec<String> {
-        self.arg_mapper[exec].iter().map(|&arg| {
-            self.query_mapper[exec].iter().fold(arg, |before, query| {
-                before.replace(&format!("?({})", query), &query_data[exec])
+        self.arg_mapper[exec]
+            .iter()
+            .map(|arg| {
+                self.query_mapper[exec].iter().fold(arg.clone(), |before, query| {
+                    before.replace(&format!("?({})", query), &query_data[exec])
+                })
             })
-        }).collect()
+            .collect()
     }
     async fn from_json(json: &str) -> ScriptMapper {
         let mut mp = ScriptMapper::new();
@@ -137,7 +140,11 @@ impl ScriptMapper {
     pub fn exist(&self, exec: &str) -> bool {
         self.exec_mapper.contains_key(exec)
     }
-    pub async fn wait_exec(&self, exec: &str, query: &HashMap<String, String>) -> anyhow::Result<String> {
+    pub async fn wait_exec(
+        &self,
+        exec: &str,
+        query: &HashMap<String, String>,
+    ) -> anyhow::Result<String> {
         if !self.exist(exec) {
             anyhow::bail!("Command {} Not Exist", exec);
         }
