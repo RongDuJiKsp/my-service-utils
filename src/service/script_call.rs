@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use crate::utils::config::script_mapper::ScriptMapper;
+use std::collections::HashMap;
 
 pub async fn call_script(script: &str, query: &HashMap<String, String>) -> String {
     let s = ScriptMapper::get().await;
@@ -7,9 +7,7 @@ pub async fn call_script(script: &str, query: &HashMap<String, String>) -> Strin
         return String::from("Query Param Not Enough!");
     }
     match s.wait_exec(script, query).await {
-        Ok(o) => {
-            o
-        }
+        Ok(o) => o,
         Err(e) => {
             format!("Exec Command With Error : {}", e)
         }

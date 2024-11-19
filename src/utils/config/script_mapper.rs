@@ -43,7 +43,10 @@ impl ScriptMapper {
                 self.query_mapper[exec]
                     .iter()
                     .fold(arg.clone(), |before, query| {
-                        before.replace(&format!("?({})", query), &query_data.get(query).get_or_insert(&def))
+                        before.replace(
+                            &format!("?({})", query),
+                            &query_data.get(query).get_or_insert(&def),
+                        )
                     })
             })
             .collect()
@@ -140,7 +143,11 @@ impl ScriptMapper {
             .expect("Error on Load ScriptMapper")
     }
     pub fn exist_all_query(&self, exec: &str, query: &HashMap<String, String>) -> bool {
-        self.query_mapper[exec].iter().filter(|x| !query.contains_key(*x)).count() == 0
+        self.query_mapper[exec]
+            .iter()
+            .filter(|x| !query.contains_key(*x))
+            .count()
+            == 0
     }
     pub fn exist(&self, exec: &str) -> bool {
         self.exec_mapper.contains_key(exec)

@@ -16,7 +16,13 @@ pub async fn check_token_param<B>(req: Request<B>, next: Next<B>) -> Result<Resp
         Err(e) => return Ok((StatusCode::FORBIDDEN, format!("Uri Error : {}", e)).into_response()),
     };
     let token = match q.get(TOKEN_PARAM) {
-        None => return Ok((StatusCode::FORBIDDEN, "You cannot access this route of Not Token.").into_response()),
+        None => {
+            return Ok((
+                StatusCode::FORBIDDEN,
+                "You cannot access this route of Not Token.",
+            )
+                .into_response())
+        }
         Some(e) => e,
     };
     if token != cfg_token {

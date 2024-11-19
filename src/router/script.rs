@@ -1,9 +1,9 @@
 use crate::middleware::token;
+use crate::service::script_call;
 use axum::extract::{Path, Query};
 use axum::middleware;
 use axum::routing::{get, Router};
 use std::collections::HashMap;
-use crate::service::script_call;
 
 pub fn route() -> Router {
     Router::new()
