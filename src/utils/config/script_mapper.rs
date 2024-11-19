@@ -139,6 +139,9 @@ impl ScriptMapper {
             .set(ScriptMapper::from_file(&ServiceConfig::get().await.script_mapper_file).await)
             .expect("Error on Load ScriptMapper")
     }
+    pub fn exist_all_query(&self, exec: &str, query: &HashMap<String, String>) -> bool {
+        self.query_mapper[exec].iter().filter(|x| !query.contains_key(*x)).count() == 0
+    }
     pub fn exist(&self, exec: &str) -> bool {
         self.exec_mapper.contains_key(exec)
     }
