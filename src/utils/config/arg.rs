@@ -7,6 +7,9 @@ pub struct ServiceConfig {
     pub script_dir: String,
     #[arg(long, default_value = "./sm.json")]
     pub script_mapper_file: String,
+    //Envs: "&[SCRIPT_PATH]"
+    #[arg(long)]
+    pub script_mapper_load_env: bool,
     #[arg(long)]
     pub handle_token: Option<String>,
 }

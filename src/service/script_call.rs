@@ -1,1 +1,1 @@
-
+fn call_script() {}
