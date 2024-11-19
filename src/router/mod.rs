@@ -1,1 +1,1 @@
-pub mod script_call;
+pub mod script;
