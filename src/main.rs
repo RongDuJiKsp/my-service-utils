@@ -1,10 +1,15 @@
+use crate::utils::config::arg::ServiceConfig;
+use crate::utils::config::script_mapper::ScriptMapper;
+
 mod application;
+mod middleware;
+mod router;
 mod service;
 mod utils;
-mod router;
-mod middleware;
 
 #[tokio::main]
 async fn main() {
-    application::app().await.expect("App Exited With Error");
+    // application::app().await.expect("App Exited With Error");
+    ServiceConfig::init().await;
+    ScriptMapper::init().await;
 }
