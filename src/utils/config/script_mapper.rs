@@ -36,13 +36,14 @@ impl ScriptMapper {
         self.query_mapper.insert(key.to_string(), split);
     }
     fn write_query(&self, exec: &str, query_data: &HashMap<String, String>) -> Vec<String> {
+        let def = String::from("");
         self.arg_mapper[exec]
             .iter()
             .map(|arg| {
                 self.query_mapper[exec]
                     .iter()
                     .fold(arg.clone(), |before, query| {
-                        before.replace(&format!("?({})", query), &query_data[exec])
+                        before.replace(&format!("?({})", query), &query_data.get(query).get_or_insert(&def))
                     })
             })
             .collect()
