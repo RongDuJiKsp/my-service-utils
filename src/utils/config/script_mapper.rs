@@ -36,6 +36,13 @@ impl ScriptMapper {
     fn load_query(&mut self, key: &str, split: Vec<String>) {
         self.query_mapper.insert(key.to_string(), split);
     }
+    fn write_query(&self, exec: &str, query_data: &HashMap<String, String>) -> Vec<String> {
+        self.arg_mapper[exec].iter().map(|&arg| {
+            self.query_mapper[exec].iter().fold(arg, |before, query| {
+                before.replace(&format!("?({})", query), &query_data[exec])
+            })
+        }).collect()
+    }
     async fn from_json(json: &str) -> ScriptMapper {
         let mut mp = ScriptMapper::new();
         let cfg = ServiceConfig::get().await;
@@ -130,7 +137,7 @@ impl ScriptMapper {
     pub fn exist(&self, exec: &str) -> bool {
         self.exec_mapper.contains_key(exec)
     }
-    pub async fn wait_exec(&self, exec: &str) -> anyhow::Result<String> {
+    pub async fn wait_exec(&self, exec: &str, query: &HashMap<String, String>) -> anyhow::Result<String> {
         if !self.exist(exec) {
             anyhow::bail!("Command {} Not Exist", exec);
         }
@@ -139,7 +146,10 @@ impl ScriptMapper {
             stderr,
             status,
             ..
-        } = Command::new("./script.sh").output().await?;
+        } = Command::new(&self.exec_mapper[exec])
+            .args(&self.write_query(exec, query))
+            .output()
+            .await?;
         let out_str = String::from_utf8(stdout)?;
         let err_str = String::from_utf8(stderr)?;
         let status = status.to_string();
