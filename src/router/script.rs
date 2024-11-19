@@ -3,6 +3,7 @@ use axum::extract::{Path, Query};
 use axum::middleware;
 use axum::routing::{get, Router};
 use std::collections::HashMap;
+use crate::service::script_call;
 
 pub fn route() -> Router {
     Router::new()
@@ -14,4 +15,5 @@ async fn run_script(
     Query(param): Query<HashMap<String, String>>,
     Path(script): Path<String>,
 ) -> String {
+    script_call::call_script(&script, &param).await
 }
