@@ -13,21 +13,14 @@ pub async fn check_token_param<B>(req: Request<B>, next: Next<B>) -> Result<Resp
     };
     let Query(q) = match Query::<HashMap<String, String>>::try_from_uri(req.uri()) {
         Ok(e) => e,
-        Err(_) => return no_token_err(),
+        Err(e) => return Ok((StatusCode::FORBIDDEN, format!("Uri Error : {}", e)).into_response()),
     };
     let token = match q.get(TOKEN_PARAM) {
-        None => return no_token_err(),
+        None => return Ok((StatusCode::FORBIDDEN, "You cannot access this route of Not Token.").into_response()),
         Some(e) => e,
     };
     if token != cfg_token {
-        return no_token_err();
+        return Ok((StatusCode::FORBIDDEN, "Token Error").into_response());
     }
     Ok(next.run(req).await)
-}
-fn no_token_err() -> Result<Response, StatusCode> {
-    Ok((
-        StatusCode::FORBIDDEN,
-        "Custom Response: You cannot access this route of Not Token.",
-    )
-        .into_response())
 }
