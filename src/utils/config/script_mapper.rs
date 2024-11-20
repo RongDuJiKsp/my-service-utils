@@ -173,12 +173,12 @@ impl ScriptMapper {
         let err_str = String::from_utf8(stderr)?;
         let status = status.to_string();
         Ok(format!(
-            "Script Exit With Status:\n {} \n Output(len {}):\n {} \n Error(len {}):\n {} \n",
+            "Script Exit With Status: {}\nOutput(len {}):\n{}\nError(len {}):\n{}\n",
             status,
-            &out_str,
             out_str.len(),
+            &out_str,
+            err_str.len(),
             &err_str,
-            err_str.len()
         ))
     }
 }
