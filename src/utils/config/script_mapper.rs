@@ -171,10 +171,18 @@ impl ScriptMapper {
             .await?;
         let out_str = String::from_utf8(stdout)?;
         let err_str = String::from_utf8(stderr)?;
-        let status = status.to_string();
+        let status_str = if let Some(code) = status.code() {
+            if code == 0 {
+                format!("Successful Exit With Code({})", code)
+            } else {
+                format!("Exit With Error Code({})", code)
+            }
+        } else {
+            "No Status Code Given".to_string()
+        };
         Ok(format!(
             "Script Exit With Status: {}\nOutput(len {}):\n{}\nError(len {}):\n{}\n",
-            status,
+            &status_str,
             out_str.len(),
             &out_str,
             err_str.len(),
